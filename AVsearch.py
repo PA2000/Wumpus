@@ -28,7 +28,7 @@ class Tile:
     #    pygame.image.load("imgs/SmallWizardADV.png"),
     #    pygame.image.load("imgs/SmallHeroADV.png")
     #]
-    
+
     def __init__(self, rowval, colval):
         self.unit = "empty"
         self.player = "neutral"
@@ -183,7 +183,7 @@ h = 729 / row
 
 
 
-#function used to modify a tile based on unit
+#function used to modify a visualized tile based on unit
 def showBoardUnit(screen, board, i, j):
     global w
     global h
@@ -215,6 +215,9 @@ for i in range(cols):
     for j in range(row):
         showBoardUnit(screen, BOARD.board, i, j)
 
+
+
+#returns a victory type string based on inputted types
 def matchup(p_type,adv_type):
     if adv_type == "empty" or p_type == "empty":
         return "Win"
@@ -689,6 +692,16 @@ while loop:
             pygame.display.update()
 
             playerTurn = True
+
+
+
+
+
+
+
+
+
+            
         if event.type == pygame.QUIT:
             pygame.display.quit()
         if pygame.mouse.get_pressed()[0]:
