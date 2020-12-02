@@ -6,19 +6,29 @@ import random
 import numpy as np
 from queue import PriorityQueue
 
-#test
-
-#create an object for each tile in the gameboard
+#Tile Object for each tile in the gameboard
 class Tile:
     #load in images
+
+    #Anthony Code:
     images = [
-        pygame.image.load("imgs/SmallWumpus.png"),
-        pygame.image.load("imgs/SmallWizard.png"),
-        pygame.image.load("imgs/SmallHero.png"),
-        pygame.image.load("imgs/SmallWumpusADV.png"),
-        pygame.image.load("imgs/SmallWizardADV.png"),
-        pygame.image.load("imgs/SmallHeroADV.png")
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpus.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizard.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHero.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpusADV.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizardADV.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHeroADV.png")
     ]
+
+    #images = [
+    #    pygame.image.load("imgs/SmallWumpus.png"),
+    #    pygame.image.load("imgs/SmallWizard.png"),
+    #    pygame.image.load("imgs/SmallHero.png"),
+    #    pygame.image.load("imgs/SmallWumpusADV.png"),
+    #    pygame.image.load("imgs/SmallWizardADV.png"),
+    #    pygame.image.load("imgs/SmallHeroADV.png")
+    #]
+    
     def __init__(self, rowval, colval):
         self.unit = "empty"
         self.player = "neutral"
@@ -65,7 +75,9 @@ class Tile:
         pygame.draw.line(screen, (0,0,0), [self.colval * w, self.rowval*h], [self.colval * w, self.rowval*h + h], 1)
         pygame.display.update()
 
-#create a gameboard containing tiles indexed by row and column
+
+
+#Gameboard Class containing tiles indexed by row and column
 class Gameboard:
     def __init__(self, side):
         self.side = side
@@ -137,6 +149,11 @@ class Gameboard:
 
 
 
+
+
+
+
+#Creating a GameBoard object for visualization
 screen = pygame.display.set_mode((729, 729))
 
 BOARD = Gameboard(9)
@@ -156,6 +173,15 @@ yellow = (255, 255, 0)
 purple = (102, 0, 255)
 w = 729 / cols
 h = 729 / row
+
+
+
+
+
+
+
+
+
 
 #function used to modify a tile based on unit
 def showBoardUnit(screen, board, i, j):
@@ -539,7 +565,7 @@ def alphaBetaPruningPQ(GB, position, tree_depth, alpha, beta, maximizingPlayer):
         while not pqueue.empty(): 
             #print("Look HERE")
             #print(pqueue.get())
-            move = pqueue.get
+            move = pqueue.get()
             if move.unit == "pit" or move.player == "agent":
                 continue   
             hold = move.unit 
@@ -585,6 +611,13 @@ def alphaBetaPruningPQ(GB, position, tree_depth, alpha, beta, maximizingPlayer):
                  print("I made it here minimizingPlayer")
                  break
          return value, bestMove
+
+
+
+
+
+
+
 
 #visualization loop
 loop = True
