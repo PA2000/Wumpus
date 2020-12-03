@@ -11,23 +11,23 @@ class Tile:
     #load in images
 
     #Anthony Code:
-    images = [
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpus.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizard.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHero.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpusADV.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizardADV.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHeroADV.png")
-    ]
-
     #images = [
-    #    pygame.image.load("imgs/SmallWumpus.png"),
-    #    pygame.image.load("imgs/SmallWizard.png"),
-    #    pygame.image.load("imgs/SmallHero.png"),
-    #    pygame.image.load("imgs/SmallWumpusADV.png"),
-    #    pygame.image.load("imgs/SmallWizardADV.png"),
-    #    pygame.image.load("imgs/SmallHeroADV.png")
+    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpus.png"),
+    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizard.png"),
+    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHero.png"),
+    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpusADV.png"),
+    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizardADV.png"),
+    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHeroADV.png")
     #]
+
+    images = [
+        pygame.image.load("imgs/SmallWumpus.png"),
+        pygame.image.load("imgs/SmallWizard.png"),
+        pygame.image.load("imgs/SmallHero.png"),
+        pygame.image.load("imgs/SmallWumpusADV.png"),
+        pygame.image.load("imgs/SmallWizardADV.png"),
+        pygame.image.load("imgs/SmallHeroADV.png")
+    ]
 
     def __init__(self, rowval, colval):
         self.unit = "empty"
@@ -83,7 +83,28 @@ class Tile:
 
 
     #this function will filter the tile into 4 different pieces, with a filter on representing an observation
-    def showOBSV(self, screen, tileLength, player):
+    def showOBSV(self, screen, h, player):
+        
+        #creating screen rectangles based on the four quadrants of the tile
+        heroRect = pygame.Rect(self.colval * h, self.rowval * h, h/2, h/2)
+        mageRect = pygame.Rect(self.colval * h + h/2, self.rowval * h, h/2, h/2)
+        wumpusRect = pygame.Rect(self.colval * h, self.rowval * h + h/2, h/2, h/2)
+        pitRect = pygame.Rect(self.colval * h + h/2, self.rowval * h + h/2, h/2, h/2)
+
+        #fills the visualization area with a filtered image if an observation is present
+        if self.OBSV[0] == 1:
+            screen.fill((255, 120, 120), heroRect, special_flags = pygame.BLEND_RGB_MULT)
+        if self.OBSV[1] == 1:
+            screen.fill((120, 255, 120), mageRect, pygame.BLEND_RGB_MULT)
+        if self.OBSV[2] == 1:
+            screen.fill((120, 120, 255), wumpusRect, pygame.BLEND_RGB_MULT)
+        if self.OBSV[3] == 1:
+            screen.fill((210, 105, 30), pitRect, pygame.BLEND_RGB_MULT)
+
+
+        pygame.draw.line(screen, (0,0,0), [self.colval * h, self.rowval*h], [self.colval * h + h, self.rowval*h], 1)
+        pygame.draw.line(screen, (0,0,0), [self.colval * h, self.rowval*h], [self.colval * h, self.rowval* h + h], 1)
+        pygame.display.update()
         return
 
 
