@@ -36,6 +36,15 @@ class Tile:
         self.rowval = rowval
         self.colval = colval
         self.img = self.images[0]
+        self.agentFog = 0
+        self.adversaryFog = 0
+
+        #observations in order: hero, mage, wumpus, pit
+        self.agentOBSV = [0, 0, 0, 0]
+        #observations made by the agent concerning adversary units
+        self.adversaryOBSV = [0, 0, 0, 0]
+        #observations made by the adversary concerning agent units
+
 
     def show(self, screen, color, w, h, playerType):
         #pygame.draw.rect(screen, color, (self.colval * w, self.colval * w, w, h), 0)
@@ -74,6 +83,11 @@ class Tile:
         pygame.draw.line(screen, (0,0,0), [self.colval * w, self.rowval*h], [self.colval * w + w, self.rowval*h], 1)
         pygame.draw.line(screen, (0,0,0), [self.colval * w, self.rowval*h], [self.colval * w, self.rowval*h + h], 1)
         pygame.display.update()
+
+
+    #this function will filter the tile into 4 different pieces, with a filter on representing an observation
+    def showOBSV(self, screen, tileLength, player):
+        return
 
 
 
@@ -147,14 +161,41 @@ class Gameboard:
             return -1
         return j + i * self.side
 
+    def reassignFogAgent(self):
+    #modifies the agent's fog parameters in the gameboard based on agent tiles
+    #works by assigning each tile as foggy, then removing the status by cycling through agent tiles
+        for i in range(self.size):
+            for j in range(self.size):
+                self.board[i][j].agentFog = 1
+        for k in range(self.size):
+            for l in range(self.size):
+                if self.board[k][l].player == "agent":
+                    self.board[k][l].agentFog = 0
 
+    def reassignFogAdversary(self):
+    #modifies the adversary's fog parameters in the gameboard based on agent tiles
+        for i in range(self.size):
+            for j in range(self.size):
+                self.board[i][j].adversaryFog = 1
+        for k in range(self.size):
+            for l in range(self.size):
+                if self.board[k][l].player == "adversary":
+                    self.board[k][l].adversaryFog = 0
 
+    def modifyAgentObsv(self):
+    #modifys the observation parameters after the agent makes a move
+        return
+    def modifyAdversaryObsv(self):
+    #modifys the observation parameters after the adversary makes a move
+        return
+
+    
 
 
 
 
 #Creating a GameBoard object for visualization
-screen = pygame.display.set_mode((729, 729))
+screen = pygame.display.set_mode((1080, 729))
 
 BOARD = Gameboard(9)
 BOARD.newBoard()
@@ -183,15 +224,14 @@ h = 729 / row
 
 
 
-#function used to modify a visualized tile based on unit
+#function used to refresh a tile on visualization
 def showBoardUnit(screen, board, i, j):
     global w
     global h
     #print("***************")
     #print(str(board[i][j].player) + "-" + str(board[i][j].unit))
     #print("***************")
-    if board[j][i].unit == "empty":
-        board[i][j].show(screen, (127,127,127), w, h, "empty")
+    board[i][j].show(screen, (127,127,127), w, h, "empty")
     if board[j][i].unit == "wumpus":
         if board[j][i].player == "adversary":
             board[i][j].show(screen, green, w, h, "wumpus")
@@ -209,13 +249,6 @@ def showBoardUnit(screen, board, i, j):
             board[i][j].show(screen, yellow, w, h, "mage-agent")
     if board[j][i].unit == "pit":
         board[i][j].show(screen, purple, w, h, "pit")
-
-#loops through entire board to create tiles
-for i in range(cols):
-    for j in range(row):
-        showBoardUnit(screen, BOARD.board, i, j)
-
-
 
 #returns a victory type string based on inputted types
 def matchup(p_type,adv_type):
@@ -240,9 +273,19 @@ def matchup(p_type,adv_type):
             else:
                 return "Loss"
 
+
+#loops through entire board to create tiles
+for i in range(cols):
+    for j in range(row):
+        showBoardUnit(screen, BOARD.board, i, j)
+
 selectSecond = False
 playerTurn = True
 validDestination = False
+currentplayer = "adversary"
+
+#variable used to determine if fog of war is currently on or off
+fogStatus = False
 
 #variable used to store selected unit
 unitSelected = BOARD.board[0][0]
@@ -250,11 +293,16 @@ unitSelected = BOARD.board[0][0]
 #variable used to store desired location
 destination = BOARD.board[0][0]
 
+
+
+#This function is linked to the visualization loop
 #when mouse clicks, selects player piece, or its desired location
 def mousePress(x):
     global selectSecond
     global playerTurn
     global validDestination
+    global fogStatus
+    global currentplayer
     global unitSelected
     global destination
     global BOARD
@@ -263,18 +311,46 @@ def mousePress(x):
     b = x[1]
     g1 = a // (729 // cols)
     g2 = b // (729 // row)
-    #selects player piece on first click
-    if selectSecond == False:
-        unitSelected = BOARD.board[g1][g2]
-        #tests if player clicks on one of their own units, or not
-        if unitSelected.player != "adversary":
-            print("invalid unit")
-            return
-        else:
-            print("selected unit")
-            selectSecond = True
 
-    #selects destination on second click
+
+
+    #sFirst Click (select unit or toggle fog of war)
+    if selectSecond == False:
+
+        #OPTION 1: toggle fog
+        if (g1 >= cols):
+            if fogStatus:
+                print("toggling off fog")
+                for i in range(cols):
+                    for j in range(row):
+                        showBoardUnit(screen, BOARD.board, i, j)
+                fogStatus = False
+            else:
+                print("toggling on fog")
+                for i in range(cols):
+                    for j in range(row):
+                        if BOARD.board[j][i].player == currentplayer:
+                            BOARD.board[i][j].showOBSV(screen, 729//cols, currentplayer)
+                        else:
+                            BOARD.board[i][j].show(screen, (0,0,0), w, h, "empty")
+                fogStatus = True
+            return
+
+
+        #OPTION 2: select unit
+        else:
+            unitSelected = BOARD.board[g1][g2]
+            #tests if player clicks on one of their own units, or not
+            if unitSelected.player != "adversary":
+                print("invalid unit")
+                return
+            else:
+                print("selected unit")
+                selectSecond = True
+
+
+
+    #Second Click (choose destination of unit)
     else:
         destination = BOARD.board[g1][g2]
         #tests if destination is valid; returns to unit selection if invalid
@@ -353,6 +429,11 @@ def mousePress(x):
         showBoardUnit(screen, BOARD.board, Ucol, Urow)
         playerTurn = False
         pygame.display.update()
+
+
+
+
+
 
 """"
 From this point on we are going to include the ai for the game 
@@ -623,13 +704,19 @@ def alphaBetaPruningPQ(GB, position, tree_depth, alpha, beta, maximizingPlayer):
 
 
 #visualization loop
-loop = True
-while loop:
+while True:
     ev = pygame.event.get()
     for event in ev:
+
+        #Commands called when game is over
         if total_pieces_player(BOARD, "agent") == 0 or total_pieces_player(BOARD, "adversary") == 0:
             print("GAME OVER!!!")
             pygame.display.quit()
+
+
+
+        #MAIN FUNCTION FOR AGENT
+
         if playerTurn == False:
             #the unit(string value) that beats the piece that was just moved
             #pToMove = win_matchup(destination.unit) 
@@ -648,10 +735,10 @@ while loop:
         
             #dummyVariable, destination = minimax(BOARD, possiblePieces[pToMove] 
             #, 6, True)
-            dummyVariable, destination = alphaBetaPruningPQ(BOARD, possiblePieces[pToMove] 
-            , 3, 0, 0, True)
+            #dummyVariable, destination = alphaBetaPruningPQ(BOARD, possiblePieces[pToMove] 
+            #, 3, 0, 0, True)
             unitSelected = possiblePieces[pToMove] 
-            print("output from minimax"+ str(dummyVariable))
+            #print("output from minimax"+ str(dummyVariable))
             print("final move"+ str([destination.rowval,destination.colval]))
             Drow = destination.rowval
             Dcol = destination.colval
@@ -701,15 +788,20 @@ while loop:
 
 
 
-            
+        #Extraneous code
         if event.type == pygame.QUIT:
             pygame.display.quit()
+
+
+        #MAIN FUNCTION FOR ADVERSARY TURN
         if pygame.mouse.get_pressed()[0]:
             try:
                 pos = pygame.mouse.get_pos()
                 mousePress(pos)
             except AttributeError:
                 pass
+
+        #Extraneous code
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 loop = False
