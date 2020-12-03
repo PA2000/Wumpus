@@ -36,14 +36,11 @@ class Tile:
         self.rowval = rowval
         self.colval = colval
         self.img = self.images[0]
-        self.agentFog = 0
-        self.adversaryFog = 0
 
         #observations in order: hero, mage, wumpus, pit
-        self.agentOBSV = [0, 0, 0, 0]
-        #observations made by the agent concerning adversary units
-        self.adversaryOBSV = [0, 0, 0, 0]
-        #observations made by the adversary concerning agent units
+        self.OBSV = [0, 0, 0, 0]
+        #observations mean different things depending on self.player
+        #If the tile belongs to an adversary, shows observations based on agent's units
 
 
     def show(self, screen, color, w, h, playerType):
@@ -161,34 +158,24 @@ class Gameboard:
             return -1
         return j + i * self.side
 
-    def reassignFogAgent(self):
-    #modifies the agent's fog parameters in the gameboard based on agent tiles
-    #works by assigning each tile as foggy, then removing the status by cycling through agent tiles
-        for i in range(self.size):
-            for j in range(self.size):
-                self.board[i][j].agentFog = 1
-        for k in range(self.size):
-            for l in range(self.size):
-                if self.board[k][l].player == "agent":
-                    self.board[k][l].agentFog = 0
+    #modifys the observation parameters after a player makes a move
+    #input is the player whose turn it is moving onto
+    def modifyOBSV(self, player):
+        for i in range(self.side):
+            for j in range(self.side):
+                if self.board[i][j].player == player:
+                    for k in self.board[i][j].neighbors:
+                        if k.unit == "pit":
+                            self.board[i][j].OBSV[3] = 1
+                        if (k.unit == "wumpus") and (k.player != player):
+                            self.board[i][j].OBSV[2] = 1
+                        if (k.unit == "mage") and (k.player != player):
+                            self.board[i][j].OBSV[1] = 1
+                        if (k.unit == "hero") and (k.player != player):
+                            self.board[i][j].OBSV[0] = 1
 
-    def reassignFogAdversary(self):
-    #modifies the adversary's fog parameters in the gameboard based on agent tiles
-        for i in range(self.size):
-            for j in range(self.size):
-                self.board[i][j].adversaryFog = 1
-        for k in range(self.size):
-            for l in range(self.size):
-                if self.board[k][l].player == "adversary":
-                    self.board[k][l].adversaryFog = 0
-
-    def modifyAgentObsv(self):
-    #modifys the observation parameters after the agent makes a move
-        return
-    def modifyAdversaryObsv(self):
-    #modifys the observation parameters after the adversary makes a move
-        return
-
+                else:
+                    self.board[i][j].OBSV = [0, 0, 0, 0]
     
 
 
@@ -421,6 +408,7 @@ def mousePress(x):
         
 
         BOARD.setNeighbors()
+        BOARD.modifyOBSV("agent")
         print("-----------")
         print(str(unitSelected.player) + "-" + str(unitSelected.unit))
         print(str(destination.player) + "-" + str(destination.unit))
@@ -773,6 +761,7 @@ while True:
             
 
             BOARD.setNeighbors()
+            BOARD.modifyOBSV("adversary")
             #updates visualization
             showBoardUnit(screen, BOARD.board, Dcol, Drow)
             showBoardUnit(screen, BOARD.board, Ucol, Urow)
