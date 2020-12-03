@@ -11,23 +11,23 @@ class Tile:
     #load in images
 
     #Anthony Code:
-    #images = [
-    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpus.png"),
-    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizard.png"),
-    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHero.png"),
-    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpusADV.png"),
-    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizardADV.png"),
-    #    pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHeroADV.png")
-    #]
-
     images = [
-        pygame.image.load("imgs/SmallWumpus.png"),
-        pygame.image.load("imgs/SmallWizard.png"),
-        pygame.image.load("imgs/SmallHero.png"),
-        pygame.image.load("imgs/SmallWumpusADV.png"),
-        pygame.image.load("imgs/SmallWizardADV.png"),
-        pygame.image.load("imgs/SmallHeroADV.png")
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpus.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizard.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHero.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpusADV.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizardADV.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHeroADV.png")
     ]
+
+    #images = [
+    #    pygame.image.load("imgs/SmallWumpus.png"),
+    #    pygame.image.load("imgs/SmallWizard.png"),
+    #    pygame.image.load("imgs/SmallHero.png"),
+    #    pygame.image.load("imgs/SmallWumpusADV.png"),
+    #    pygame.image.load("imgs/SmallWizardADV.png"),
+    #    pygame.image.load("imgs/SmallHeroADV.png")
+    #]
 
     def __init__(self, rowval, colval):
         self.unit = "empty"
@@ -209,6 +209,7 @@ BOARD = Gameboard(9)
 BOARD.newBoard()
 BOARD.setPits()
 BOARD.setNeighbors()
+BOARD.modifyOBSV("adversary")
 
 
 cols = BOARD.side
