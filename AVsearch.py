@@ -187,16 +187,16 @@ class Gameboard:
                 if self.board[i][j].player == player:
                     for k in self.board[i][j].neighbors:
                         if k.unit == "pit":
-                            self.board[i][j].OBSV[3] = 1
+                            self.board[j][i].OBSV[3] = 1
                         if (k.unit == "wumpus") and (k.player != player):
-                            self.board[i][j].OBSV[2] = 1
+                            self.board[j][i].OBSV[2] = 1
                         if (k.unit == "mage") and (k.player != player):
-                            self.board[i][j].OBSV[1] = 1
+                            self.board[j][i].OBSV[1] = 1
                         if (k.unit == "hero") and (k.player != player):
-                            self.board[i][j].OBSV[0] = 1
+                            self.board[j][i].OBSV[0] = 1
 
                 else:
-                    self.board[i][j].OBSV = [0, 0, 0, 0]
+                    self.board[j][i].OBSV = [0, 0, 0, 0]
     
 
 
@@ -361,6 +361,10 @@ def mousePress(x):
 
     #Second Click (choose destination of unit)
     else:
+        if (g1 >= cols):
+            selectSecond = False
+            print("invalid destination")
+            return
         destination = BOARD.board[g1][g2]
         #tests if destination is valid; returns to unit selection if invalid
         for neighbor in unitSelected.neighbors:
