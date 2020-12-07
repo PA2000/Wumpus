@@ -209,7 +209,7 @@ class Gameboard:
 
 pygame.init()
 #Creating a GameBoard object for visualization
-screen = pygame.display.set_mode((1080, 729))
+screen = pygame.display.set_mode((1080, 720))
 
 BOARD = Gameboard(9)
 BOARD.newBoard()
@@ -220,8 +220,8 @@ BOARD.modifyOBSV("adversary")
 
 cols = BOARD.side
 row = BOARD.side
-w = 729 // cols
-h = 729 // row
+w = 720 // cols
+h = 720 // row
 
 red = (255, 0, 0)
 green = (0, 255, 0)
@@ -304,19 +304,19 @@ currentplayer = "adversary"
 font = pygame.font.Font('freesansbold.ttf', 32)
 
 pygame.draw.rect(screen, (250,250,250), [800, 20, 200, 40])
-text1 = font.render('New 3x3', True, (255,0,0))
+text1 = font.render('New 3x3', True, (0,0,0))
 screen.blit(text1, (830, 20))
 
 pygame.draw.rect(screen, (250,250,250), [800, 80, 200, 40])
-text2 = font.render('New 6x6', True, (255,0,0))
+text2 = font.render('New 6x6', True, (0,0,0))
 screen.blit(text2, (830, 80))
 
 pygame.draw.rect(screen, (250,250,250), [800, 140, 200, 40])
-text3 = font.render('New 9x9', True, (255,0,0))
+text3 = font.render('New 9x9', True, (0,0,0))
 screen.blit(text3, (830, 140))
 
 pygame.draw.rect(screen, (250,250,250), [800, 200, 200, 40])
-text4 = font.render('Toggle Fog', True, (255,0,0))
+text4 = font.render('Toggle Fog', True, (0,0,0))
 screen.blit(text4, (810, 200))
 pygame.display.update()
 
@@ -349,8 +349,8 @@ def mousePress(x):
     global h
     a = x[0]
     b = x[1]
-    g1 = a // (729 // cols)
-    g2 = b // (729 // row)
+    g1 = a // (720 // cols)
+    g2 = b // (720 // row)
 
 
     
@@ -386,8 +386,8 @@ def mousePress(x):
             BOARD.modifyOBSV("adversary")
             cols = BOARD.side
             row = BOARD.side
-            w = 729 / cols
-            h = 729 / row
+            w = 720 / cols
+            h = 720 / row
             for i in range(cols):
                 for j in range(row):
                     showBoardUnit(screen, BOARD.board, i, j)
@@ -409,8 +409,8 @@ def mousePress(x):
             BOARD.modifyOBSV("adversary")
             cols = BOARD.side
             row = BOARD.side
-            w = 729 / cols
-            h = 729 / row
+            w = 720 / cols
+            h = 720 / row
             for i in range(cols):
                 for j in range(row):
                     showBoardUnit(screen, BOARD.board, i, j)
@@ -432,8 +432,8 @@ def mousePress(x):
             BOARD.modifyOBSV("adversary")
             cols = BOARD.side
             row = BOARD.side
-            w = 729 / cols
-            h = 729 / row
+            w = 720 / cols
+            h = 720 / row
             for i in range(cols):
                 for j in range(row):
                     showBoardUnit(screen, BOARD.board, i, j)
