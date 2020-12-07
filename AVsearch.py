@@ -12,21 +12,21 @@ class Tile:
 
     #Anthony Code:
     images = [
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpus.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizard.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHero.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWumpusADV.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallWizardADV.png"),
-        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/SmallHeroADV.png")
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/bluewumpus.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/bluewizard.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/bluehero.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/redwumpus.png"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/redwizard.jpg"),
+        pygame.image.load("C:/PYTHONSTUFF/Wumpus/imgs/redhero.png")
     ]
 
     #images = [
-    #    pygame.image.load("imgs/SmallWumpus.png"),
-    #    pygame.image.load("imgs/SmallWizard.png"),
-    #    pygame.image.load("imgs/SmallHero.png"),
-    #    pygame.image.load("imgs/SmallWumpusADV.png"),
-    #    pygame.image.load("imgs/SmallWizardADV.png"),
-    #    pygame.image.load("imgs/SmallHeroADV.png")
+    #    pygame.image.load("imgs/bluewumpus.png"),
+    #    pygame.image.load("imgs/bluewizard.png"),
+    #    pygame.image.load("imgs/bluehero.png"),
+    #    pygame.image.load("imgs/redwumpus.png"),
+    #    pygame.image.load("imgs/redwizard.jpg"),
+    #    pygame.image.load("imgs/redhero.png")
     #]
 
     def __init__(self, rowval, colval):
