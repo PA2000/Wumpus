@@ -93,7 +93,7 @@ class Tile:
 
         #fills the visualization area with a filtered image if an observation is present
         if self.OBSV[0] == 1:
-            screen.fill((255, 120, 120), heroRect, special_flags = pygame.BLEND_RGB_MULT)
+            screen.fill((255, 120, 120), heroRect, pygame.BLEND_RGB_MULT)
         if self.OBSV[1] == 1:
             screen.fill((120, 255, 120), mageRect, pygame.BLEND_RGB_MULT)
         if self.OBSV[2] == 1:
@@ -201,7 +201,7 @@ class Gameboard:
 
 
 
-
+pygame.init()
 #Creating a GameBoard object for visualization
 screen = pygame.display.set_mode((1080, 729))
 
@@ -214,6 +214,9 @@ BOARD.modifyOBSV("adversary")
 
 cols = BOARD.side
 row = BOARD.side
+w = 729 / cols
+h = 729 / row
+
 red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
@@ -221,8 +224,6 @@ grey = (220, 220, 220)
 orange = (255, 102, 0)
 yellow = (255, 255, 0)
 purple = (102, 0, 255)
-w = 729 / cols
-h = 729 / row
 
 
 
@@ -293,6 +294,26 @@ playerTurn = True
 validDestination = False
 currentplayer = "adversary"
 
+#creates toggle fog buton, 3 by 3 button, 6 by 6 button, and 9 by 9 button
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+pygame.draw.rect(screen, (250,250,250), [800, 20, 200, 40])
+text1 = font.render('New 3x3', True, (255,0,0))
+screen.blit(text1, (830, 20))
+
+pygame.draw.rect(screen, (250,250,250), [800, 80, 200, 40])
+text2 = font.render('New 6x6', True, (255,0,0))
+screen.blit(text2, (830, 80))
+
+pygame.draw.rect(screen, (250,250,250), [800, 140, 200, 40])
+text3 = font.render('New 9x9', True, (255,0,0))
+screen.blit(text3, (830, 140))
+
+pygame.draw.rect(screen, (250,250,250), [800, 200, 200, 40])
+text4 = font.render('Toggle Fog', True, (255,0,0))
+screen.blit(text4, (810, 200))
+pygame.display.update()
+
 #variable used to determine if fog of war is currently on or off
 fogStatus = False
 
@@ -316,18 +337,23 @@ def mousePress(x):
     global destination
     global BOARD
     global screen
+    global cols
+    global row
+    global w
+    global h
     a = x[0]
     b = x[1]
     g1 = a // (729 // cols)
     g2 = b // (729 // row)
 
 
+    
 
     #sFirst Click (select unit or toggle fog of war)
     if selectSecond == False:
 
         #OPTION 1: toggle fog
-        if (g1 >= cols):
+        if (a < 1000 and a > 800 and b < 240 and b > 200):
             if fogStatus:
                 print("toggling off fog")
                 for i in range(cols):
@@ -345,9 +371,78 @@ def mousePress(x):
                 fogStatus = True
             return
 
+        #OPTION 2: create new 3 by 3 board
+        if (a < 1000 and a > 800 and b < 60 and b > 20):
+            BOARD = Gameboard(3)
+            BOARD.newBoard()
+            BOARD.setPits()
+            BOARD.setNeighbors()
+            BOARD.modifyOBSV("adversary")
+            cols = BOARD.side
+            row = BOARD.side
+            w = 729 / cols
+            h = 729 / row
+            for i in range(cols):
+                for j in range(row):
+                    showBoardUnit(screen, BOARD.board, i, j)
+                    
+            selectSecond = False
+            playerTurn = True
+            validDestination = False
+            currentplayer = "adversary"
+            fogStatus = False
+            unitSelected = BOARD.board[0][0]
+            destination = BOARD.board[0][0]
+        
+        #OPTION 3: create new 6 by 6 board
+        if (a < 1000 and a > 800 and b < 120 and b > 80):
+            BOARD = Gameboard(6)
+            BOARD.newBoard()
+            BOARD.setPits()
+            BOARD.setNeighbors()
+            BOARD.modifyOBSV("adversary")
+            cols = BOARD.side
+            row = BOARD.side
+            w = 729 / cols
+            h = 729 / row
+            for i in range(cols):
+                for j in range(row):
+                    showBoardUnit(screen, BOARD.board, i, j)
+                    
+            selectSecond = False
+            playerTurn = True
+            validDestination = False
+            currentplayer = "adversary"
+            fogStatus = False
+            unitSelected = BOARD.board[0][0]
+            destination = BOARD.board[0][0]
 
-        #OPTION 2: select unit
-        else:
+        #OPTION 4: create new 9 by 9 board
+        if (a < 1000 and a > 800 and b < 180 and b > 140):
+            BOARD = Gameboard(9)
+            BOARD.newBoard()
+            BOARD.setPits()
+            BOARD.setNeighbors()
+            BOARD.modifyOBSV("adversary")
+            cols = BOARD.side
+            row = BOARD.side
+            w = 729 / cols
+            h = 729 / row
+            for i in range(cols):
+                for j in range(row):
+                    showBoardUnit(screen, BOARD.board, i, j)
+                    
+            selectSecond = False
+            playerTurn = True
+            validDestination = False
+            currentplayer = "adversary"
+            fogStatus = False
+            unitSelected = BOARD.board[0][0]
+            destination = BOARD.board[0][0]
+            
+
+        #OPTION 5: select unit
+        elif (g1 < cols):
             unitSelected = BOARD.board[g1][g2]
             #tests if player clicks on one of their own units, or not
             if unitSelected.player != "adversary":
@@ -356,6 +451,11 @@ def mousePress(x):
             else:
                 print("selected unit")
                 selectSecond = True
+
+        #OPTION 6: progress agent's move
+        else:
+            print("invalid mouse press location")
+            return
 
 
 
