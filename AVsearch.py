@@ -47,29 +47,35 @@ class Tile:
         #pygame.draw.rect(screen, color, (self.colval * w, self.colval * w, w, h), 0)
         if playerType == "wumpus":
             self.img = self.images[0]
+            self.img = pygame.transform.scale(self.img, (int(w), int(h)))
             imageRect = self.img.get_rect()
             screen.blit(self.img, (self.colval * w, self.rowval * h), imageRect)
             #screen.blit(self.img, [self.colval * w, self.rowval*h])
         if playerType == "mage":
             self.img = self.images[1]
+            self.img = pygame.transform.scale(self.img, (int(w), int(h)))
             imageRect = self.img.get_rect()
             screen.blit(self.img, (self.colval * w, self.rowval * h), imageRect)
             #screen.blit(self.img, [self.colval * w, self.rowval*h])
         if playerType == "hero":
             self.img = self.images[2]
+            self.img = pygame.transform.scale(self.img, (int(w), int(h)))
             imageRect = self.img.get_rect()
             screen.blit(self.img, (self.colval * w, self.rowval * h), imageRect)
             #screen.blit(self.img, [self.colval * w, self.rowval * h])
         if playerType == "wumpus-agent":
             self.img = self.images[3]
+            self.img = pygame.transform.scale(self.img, (int(w), int(h)))
             imageRect = self.img.get_rect()
             screen.blit(self.img, (self.colval * w, self.rowval * h), imageRect)
         if playerType == "mage-agent":
             self.img = self.images[4]
+            self.img = pygame.transform.scale(self.img, (int(w), int(h)))
             imageRect = self.img.get_rect()
             screen.blit(self.img, (self.colval * w, self.rowval * h), imageRect)
         if playerType == "hero-agent":
             self.img = self.images[5]
+            self.img = pygame.transform.scale(self.img, (int(w), int(h)))
             imageRect = self.img.get_rect()
             screen.blit(self.img, (self.colval * w, self.rowval * h), imageRect)
         if playerType == "empty":
@@ -214,8 +220,8 @@ BOARD.modifyOBSV("adversary")
 
 cols = BOARD.side
 row = BOARD.side
-w = 729 / cols
-h = 729 / row
+w = 729 // cols
+h = 729 // row
 
 red = (255, 0, 0)
 green = (0, 255, 0)
