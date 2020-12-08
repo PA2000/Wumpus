@@ -39,6 +39,12 @@ class Tile:
 
         #observations in order: hero, mage, wumpus, pit
         self.OBSV = [0, 0, 0, 0]
+        #Legend:
+        #first(0) index corresponds to enemy hero in adjacent tile
+        #second(1) index corresponds to enemy hero in adjacent tile
+        #third(2) index corresponds to enemy hero in adjacent tile
+        #fourth(3) index corresponds to enemy hero in adjacent tile
+
         #observations mean different things depending on self.player
         #If the tile belongs to an adversary, shows observations based on agent's units
 
@@ -399,7 +405,6 @@ def mousePress(x):
             BOARD = Gameboard(9)
         
         if a < 1000 and a > 800 and ((b < 180 and b > 140) or (b < 120 and b > 80) or (b < 60 and b > 20)):
-            
             BOARD.newBoard()
             BOARD.setPits()
             BOARD.setNeighbors()
@@ -477,7 +482,7 @@ def mousePress(x):
             autoAgentMove = True
             return
 
-        #OPTION 8: clicking elsewhere
+        #OPTION 8: clicking  elsewhere
         else:
             print("invalid mouse press location")
             return
