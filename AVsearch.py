@@ -301,23 +301,28 @@ validDestination = False
 currentplayer = "adversary"
 
 #creates toggle fog buton, 3 by 3 button, 6 by 6 button, and 9 by 9 button
-font = pygame.font.Font('freesansbold.ttf', 32)
+font = pygame.font.Font('freesansbold.ttf', 20)
 
 pygame.draw.rect(screen, (250,250,250), [800, 20, 200, 40])
 text1 = font.render('New 3x3', True, (0,0,0))
-screen.blit(text1, (830, 20))
+screen.blit(text1, (850, 20))
 
 pygame.draw.rect(screen, (250,250,250), [800, 80, 200, 40])
 text2 = font.render('New 6x6', True, (0,0,0))
-screen.blit(text2, (830, 80))
+screen.blit(text2, (850, 80))
 
 pygame.draw.rect(screen, (250,250,250), [800, 140, 200, 40])
 text3 = font.render('New 9x9', True, (0,0,0))
-screen.blit(text3, (830, 140))
+screen.blit(text3, (850, 140))
 
 pygame.draw.rect(screen, (250,250,250), [800, 200, 200, 40])
 text4 = font.render('Toggle Fog', True, (0,0,0))
-screen.blit(text4, (810, 200))
+screen.blit(text4, (830, 200))
+
+pygame.draw.rect(screen, (250,250,250), [800, 260, 200, 40])
+text4 = font.render('Toggle Agent Auto', True, (0,0,0))
+screen.blit(text4, (810, 260))
+
 pygame.display.update()
 
 #variable used to determine if fog of war is currently on or off
@@ -329,6 +334,9 @@ unitSelected = BOARD.board[0][0]
 #variable used to store desired location
 destination = BOARD.board[0][0]
 
+#Defaults to agent automatically moving once player does a turn
+autoAgentMove = True
+oneMoveOnly = False
 
 
 #This function is linked to the visualization loop
@@ -341,6 +349,7 @@ def mousePress(x):
     global currentplayer
     global unitSelected
     global destination
+    global autoAgentMove
     global BOARD
     global screen
     global cols
@@ -378,54 +387,19 @@ def mousePress(x):
             return
 
         #OPTION 2: create new 3 by 3 board
-        if (a < 1000 and a > 800 and b < 60 and b > 20):
+        elif (a < 1000 and a > 800 and b < 60 and b > 20):
             BOARD = Gameboard(3)
-            BOARD.newBoard()
-            BOARD.setPits()
-            BOARD.setNeighbors()
-            BOARD.modifyOBSV("adversary")
-            cols = BOARD.side
-            row = BOARD.side
-            w = 720 / cols
-            h = 720 / row
-            for i in range(cols):
-                for j in range(row):
-                    showBoardUnit(screen, BOARD.board, i, j)
-                    
-            selectSecond = False
-            playerTurn = True
-            validDestination = False
-            currentplayer = "adversary"
-            fogStatus = False
-            unitSelected = BOARD.board[0][0]
-            destination = BOARD.board[0][0]
         
         #OPTION 3: create new 6 by 6 board
-        if (a < 1000 and a > 800 and b < 120 and b > 80):
+        elif (a < 1000 and a > 800 and b < 120 and b > 80):
             BOARD = Gameboard(6)
-            BOARD.newBoard()
-            BOARD.setPits()
-            BOARD.setNeighbors()
-            BOARD.modifyOBSV("adversary")
-            cols = BOARD.side
-            row = BOARD.side
-            w = 720 / cols
-            h = 720 / row
-            for i in range(cols):
-                for j in range(row):
-                    showBoardUnit(screen, BOARD.board, i, j)
-                    
-            selectSecond = False
-            playerTurn = True
-            validDestination = False
-            currentplayer = "adversary"
-            fogStatus = False
-            unitSelected = BOARD.board[0][0]
-            destination = BOARD.board[0][0]
 
         #OPTION 4: create new 9 by 9 board
-        if (a < 1000 and a > 800 and b < 180 and b > 140):
+        elif (a < 1000 and a > 800 and b < 180 and b > 140):
             BOARD = Gameboard(9)
+        
+        if a < 1000 and a > 800 and ((b < 180 and b > 140) or (b < 120 and b > 80) or (b < 60 and b > 20)):
+            
             BOARD.newBoard()
             BOARD.setPits()
             BOARD.setNeighbors()
@@ -445,10 +419,20 @@ def mousePress(x):
             fogStatus = False
             unitSelected = BOARD.board[0][0]
             destination = BOARD.board[0][0]
+            autoAgentMove = True
+            oneMoveOnly = False
+            pygame.draw.rect(screen, (0,0,0), [800, 320, 200, 40])
+            pygame.display.update()
             
 
         #OPTION 5: select unit
         elif (g1 < cols):
+            if fogStatus == True:
+                print ("Turn off fog to enter a move")
+                return
+            if playerTurn == False:
+                print("not your turn")
+                return
             unitSelected = BOARD.board[g1][g2]
             #tests if player clicks on one of their own units, or not
             if unitSelected.player != "adversary":
@@ -458,10 +442,46 @@ def mousePress(x):
                 print("selected unit")
                 selectSecond = True
 
-        #OPTION 6: progress agent's move
+        #OPTION 6: toggle agent moving automatically
+        elif (a < 1000 and a > 800 and b < 300 and b > 260):
+            if fogStatus == True:
+                print ("Turn off fog to toggle agent auto")
+                return
+            if autoAgentMove == True:
+                print('toggling agent auto off')
+
+                pygame.draw.rect(screen, (250,250,250), [800, 320, 200, 40])
+                text4 = font.render('Advance Agent', True, (0,0,0))
+                screen.blit(text4, (810, 320))
+                pygame.display.update()
+
+                autoAgentMove = False
+                return
+
+            if autoAgentMove == False:
+                print('toggling agent auto on')
+                pygame.draw.rect(screen, (0,0,0), [800, 320, 200, 40])
+                pygame.display.update()
+                autoAgentMove = True
+                return
+
+        #OPTION 7: advance agent move by one move
+        elif (a < 1000 and a > 800 and b < 360 and b > 320 and autoAgentMove == False):
+            if fogStatus == True:
+                print ("Turn off fog advance the agent")
+                return
+            if playerTurn == True:
+                print('It is your move')
+                return
+            oneMoveOnly = True
+            autoAgentMove = True
+            return
+
+        #OPTION 8: clicking elsewhere
         else:
             print("invalid mouse press location")
             return
+        
 
 
 
@@ -837,7 +857,11 @@ while True:
 
         #MAIN FUNCTION FOR AGENT
 
-        if playerTurn == False:
+        if playerTurn == False and autoAgentMove == True:
+            
+            if oneMoveOnly == True:
+                autoAgentMove = False
+                oneMoveOnly = False
             #the unit(string value) that beats the piece that was just moved
             #pToMove = win_matchup(destination.unit) 
             #possiblePieces = get_pieces(BOARD, pToMove)
@@ -914,7 +938,7 @@ while True:
             pygame.display.quit()
 
 
-        #MAIN FUNCTION FOR ADVERSARY TURN
+        #MAIN FUNCTION FOR MOUSE CLICKING
         if pygame.mouse.get_pressed()[0]:
             try:
                 pos = pygame.mouse.get_pos()
