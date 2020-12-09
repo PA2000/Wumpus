@@ -48,6 +48,13 @@ class Tile:
         #observations mean different things depending on self.player
         #If the tile belongs to an adversary, shows observations based on agent's units
 
+        self.pValues = [0, 0, 0, 0]
+        #Legend:
+        #first(0) index corresponds to probability of enemy hero in adjacent tile
+        #second(1) index corresponds to probability of enemy hero in adjacent tile
+        #third(2) index corresponds to probability of enemy hero in adjacent tile
+        #fourth(3) index corresponds to probability of enemy hero in adjacent tile
+
 
     def show(self, screen, color, w, h, playerType):
         #pygame.draw.rect(screen, color, (self.colval * w, self.colval * w, w, h), 0)
@@ -370,7 +377,7 @@ def mousePress(x):
 
     
 
-    #sFirst Click (select unit or toggle fog of war)
+    #First Click (select unit or toggle fog of war)
     if selectSecond == False:
 
         #OPTION 1: toggle fog
@@ -380,6 +387,9 @@ def mousePress(x):
                 for i in range(cols):
                     for j in range(row):
                         showBoardUnit(screen, BOARD.board, i, j)
+                
+                pygame.draw.rect(screen, (0,0,0), [800, 400, 200, 280])
+                pygame.display.update()
                 fogStatus = False
             else:
                 print("toggling on fog")
@@ -430,11 +440,40 @@ def mousePress(x):
             pygame.display.update()
             
 
-        #OPTION 5: select unit
-        elif (g1 < cols):
-            if fogStatus == True:
-                print ("Turn off fog to enter a move")
+
+        #OPTION 5: Enable showing of p values by selecting a tile when in the fog of war
+        elif (g1 < cols and fogStatus == True):
+
+            tileSelected = BOARD.board[g1][g2]
+            if (tileSelected.player == "agent" and playerTurn == False) or (tileSelected.player == "adversary" and playerTurn == True):
+                print("known tile")
                 return
+                                
+            pygame.draw.rect(screen, (250,250,250), [800, 400, 200, 40])
+            text4 = font.render('P(hero):', True, (255,120,120))
+            screen.blit(text4, (810, 400))
+
+            pygame.draw.rect(screen, (250,250,250), [800, 460, 200, 40])
+            text4 = font.render('P(mage):', True, (120,255,120))
+            screen.blit(text4, (810, 460))
+
+            pygame.draw.rect(screen, (250,250,250), [800, 520, 200, 40])
+            text4 = font.render('P(wumpus):', True, (120,120,255))
+            screen.blit(text4, (810, 520))
+
+            pygame.draw.rect(screen, (250,250,250), [800, 580, 200, 40])
+            text4 = font.render('P(pit):', True, (210,105,30))
+            screen.blit(text4, (810, 580))
+
+            pygame.draw.rect(screen, (250,250,250), [800, 640, 200, 40])
+            text4 = font.render('Current Tile:', True, (250,250,250))
+            screen.blit(text4, (810, 640))
+            pygame.display.update()
+
+
+
+        #OPTION 6: select unit
+        elif (g1 < cols):
             if playerTurn == False:
                 print("not your turn")
                 return
@@ -447,7 +486,7 @@ def mousePress(x):
                 print("selected unit")
                 selectSecond = True
 
-        #OPTION 6: toggle agent moving automatically
+        #OPTION 7: toggle agent moving automatically
         elif (a < 1000 and a > 800 and b < 300 and b > 260):
             if fogStatus == True:
                 print ("Turn off fog to toggle agent auto")
@@ -470,7 +509,7 @@ def mousePress(x):
                 autoAgentMove = True
                 return
 
-        #OPTION 7: advance agent move by one move
+        #OPTION 8: advance agent move by one move
         elif (a < 1000 and a > 800 and b < 360 and b > 320 and autoAgentMove == False):
             if fogStatus == True:
                 print ("Turn off fog advance the agent")
@@ -482,7 +521,8 @@ def mousePress(x):
             autoAgentMove = True
             return
 
-        #OPTION 8: clicking  elsewhere
+
+        #OPTION 9: clicking elsewhere
         else:
             print("invalid mouse press location")
             return
