@@ -114,7 +114,7 @@ class Tile:
         if self.OBSV[0] == 1:
             screen.fill((255, 120, 120), heroRect, pygame.BLEND_RGB_MULT)
         if self.OBSV[1] == 1:
-            screen.fill((120, 255, 120), mageRect, pygame.BLEND_RGB_MULT)
+            screen.fill((102, 204, 0), mageRect, pygame.BLEND_RGB_MULT)
         if self.OBSV[2] == 1:
             screen.fill((120, 120, 255), wumpusRect, pygame.BLEND_RGB_MULT)
         if self.OBSV[3] == 1:
@@ -396,9 +396,11 @@ def mousePress(x):
                 for i in range(cols):
                     for j in range(row):
                         if BOARD.board[j][i].player == currentplayer:
-                            BOARD.board[i][j].showOBSV(screen, 729//cols, currentplayer)
+                            BOARD.board[i][j].showOBSV(screen, 720//cols, currentplayer)
                         else:
-                            BOARD.board[i][j].show(screen, (0,0,0), w, h, "empty")
+                            tilerect = pygame.Rect(j * h, i * h, h, h)
+                            screen.fill((80, 80, 80), tilerect, pygame.BLEND_RGB_MULT)
+                            pygame.display.update()
                 fogStatus = True
             return
 
@@ -436,7 +438,7 @@ def mousePress(x):
             destination = BOARD.board[0][0]
             autoAgentMove = True
             oneMoveOnly = False
-            pygame.draw.rect(screen, (0,0,0), [800, 320, 200, 40])
+            pygame.draw.rect(screen, (0,0,0), [800, 320, 200, 360])
             pygame.display.update()
             
 
@@ -446,27 +448,34 @@ def mousePress(x):
 
             tileSelected = BOARD.board[g1][g2]
             if (tileSelected.player == "agent" and playerTurn == False) or (tileSelected.player == "adversary" and playerTurn == True):
+                pygame.draw.rect(screen, (250,250,250), [800, 640, 200, 40])
+                text4 = font.render("KNOWN TILE", True, (0,0,0))
+                screen.blit(text4, (810, 640))
+                pygame.display.update()
+                
                 print("known tile")
                 return
                                 
+            #Note: tile.colval corresponds to the visualization's row, and vice versa:
+
             pygame.draw.rect(screen, (250,250,250), [800, 400, 200, 40])
-            text4 = font.render('P(hero):', True, (255,120,120))
+            text4 = font.render('P(hero):' + str(tileSelected.pValues[0]), True, (255,120,120))
             screen.blit(text4, (810, 400))
 
             pygame.draw.rect(screen, (250,250,250), [800, 460, 200, 40])
-            text4 = font.render('P(mage):', True, (120,255,120))
+            text4 = font.render('P(mage):' + str(tileSelected.pValues[1]), True, (102,204,0))
             screen.blit(text4, (810, 460))
 
             pygame.draw.rect(screen, (250,250,250), [800, 520, 200, 40])
-            text4 = font.render('P(wumpus):', True, (120,120,255))
+            text4 = font.render('P(wumpus):' + str(tileSelected.pValues[2]), True, (120,120,255))
             screen.blit(text4, (810, 520))
 
             pygame.draw.rect(screen, (250,250,250), [800, 580, 200, 40])
-            text4 = font.render('P(pit):', True, (210,105,30))
+            text4 = font.render('P(pit):' + str(tileSelected.pValues[3]), True, (210,105,30))
             screen.blit(text4, (810, 580))
 
             pygame.draw.rect(screen, (250,250,250), [800, 640, 200, 40])
-            text4 = font.render('Current Tile:', True, (250,250,250))
+            text4 = font.render("Current Tile: " + str(tileSelected.colval) + "," + str(tileSelected.rowval), True, (0,0,0))
             screen.blit(text4, (810, 640))
             pygame.display.update()
 
