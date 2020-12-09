@@ -45,8 +45,7 @@ class Tile:
         #third(2) index corresponds to enemy hero in adjacent tile
         #fourth(3) index corresponds to enemy hero in adjacent tile
 
-        #observations mean different things depending on self.player
-        #If the tile belongs to an adversary, shows observations based on agent's units
+        #These will automatically be made for each tile every round: requires no input for algorithm
 
         self.pValues = [0, 0, 0, 0]
         #Legend:
@@ -54,6 +53,8 @@ class Tile:
         #second(1) index corresponds to probability of enemy hero in adjacent tile
         #third(2) index corresponds to probability of enemy hero in adjacent tile
         #fourth(3) index corresponds to probability of enemy hero in adjacent tile
+
+        #These will need to be manually calculated by the algorithm, then updated every round
 
 
     def show(self, screen, color, w, h, playerType):
