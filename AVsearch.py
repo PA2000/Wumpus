@@ -647,6 +647,7 @@ def mousePress(x):
         showBoardUnit(screen, BOARD.board, Dcol, Drow)
         showBoardUnit(screen, BOARD.board, Ucol, Urow)
         playerTurn = False
+        currentplayer = "agent"
         pygame.display.update()
 
 
@@ -1020,6 +1021,7 @@ while True:
             pygame.display.update()
 
             playerTurn = True
+            currentplayer = "adversary"
 
 
 
