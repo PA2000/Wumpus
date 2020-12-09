@@ -364,6 +364,7 @@ def mousePress(x):
     global unitSelected
     global destination
     global autoAgentMove
+    global oneMoveOnly
     global BOARD
     global screen
     global cols
@@ -955,8 +956,9 @@ while True:
         #MAIN FUNCTION FOR AGENT
 
         if playerTurn == False and autoAgentMove == True:
-            
+            print("agent move")
             if oneMoveOnly == True:
+                print("one only")
                 autoAgentMove = False
                 oneMoveOnly = False
             #the unit(string value) that beats the piece that was just moved
