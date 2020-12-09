@@ -351,6 +351,7 @@ destination = BOARD.board[0][0]
 autoAgentMove = True
 oneMoveOnly = False
 
+prevTile = None
 
 #This function is linked to the visualization loop
 #when mouse clicks, selects player piece, or its desired location
@@ -373,7 +374,7 @@ def mousePress(x):
     b = x[1]
     g1 = a // (720 // cols)
     g2 = b // (720 // row)
-
+    global prevTile
 
     
 
@@ -438,12 +439,14 @@ def mousePress(x):
             destination = BOARD.board[0][0]
             autoAgentMove = True
             oneMoveOnly = False
+            prevTile = None
+            
             pygame.draw.rect(screen, (0,0,0), [800, 320, 200, 360])
             pygame.display.update()
             
 
 
-        #OPTION 5: Enable showing of p values by selecting a tile when in the fog of war
+        #OPTION 5: Shows the p values by selecting a tile when in the fog of war
         elif (g1 < cols and fogStatus == True):
 
             tileSelected = BOARD.board[g1][g2]
@@ -451,9 +454,12 @@ def mousePress(x):
                 pygame.draw.rect(screen, (250,250,250), [800, 640, 200, 40])
                 text4 = font.render("KNOWN TILE", True, (0,0,0))
                 screen.blit(text4, (810, 640))
+
+                if prevTile is not None:
+                    screen.fill((80, 80, 0), prevTile, pygame.BLEND_RGB_SUB)
+                prevTile = None
+
                 pygame.display.update()
-                
-                print("known tile")
                 return
                                 
             #Note: tile.colval corresponds to the visualization's row, and vice versa:
@@ -477,6 +483,15 @@ def mousePress(x):
             pygame.draw.rect(screen, (250,250,250), [800, 640, 200, 40])
             text4 = font.render("Current Tile: " + str(tileSelected.colval) + "," + str(tileSelected.rowval), True, (0,0,0))
             screen.blit(text4, (810, 640))
+
+            
+            tilerect = pygame.Rect(g1 * h, g2 * h, h, h)
+            screen.fill((80, 80, 0), tilerect, pygame.BLEND_RGB_ADD)
+
+            if prevTile is not None:
+                screen.fill((80, 80, 0), prevTile, pygame.BLEND_RGB_SUB)
+            prevTile = tilerect
+
             pygame.display.update()
 
 
@@ -494,6 +509,12 @@ def mousePress(x):
             else:
                 print("selected unit")
                 selectSecond = True
+
+                tilerect = pygame.Rect(g1 * h, g2 * h, h, h)
+                screen.fill((80, 80, 0), tilerect, pygame.BLEND_RGB_ADD)
+                prevTile = tilerect
+
+                pygame.display.update()
 
         #OPTION 7: toggle agent moving automatically
         elif (a < 1000 and a > 800 and b < 300 and b > 260):
@@ -544,6 +565,7 @@ def mousePress(x):
         if (g1 >= cols):
             selectSecond = False
             print("invalid destination")
+            showBoardUnit(screen, BOARD.board, g2, g1)
             return
         destination = BOARD.board[g1][g2]
         #tests if destination is valid; returns to unit selection if invalid
@@ -554,10 +576,12 @@ def mousePress(x):
         if validDestination == False:
             selectSecond = False
             print("invalid destination")
+            showBoardUnit(screen, BOARD.board, g2, g1)
             return
         if destination.player == "adversary":
             selectSecond = False
             print("invalid destination")
+            showBoardUnit(screen, BOARD.board, g2, g1)
             return
         if destination.unit == "pit":
             validDestination = False
@@ -576,6 +600,7 @@ def mousePress(x):
             return
 
         #once verifying destination, unit goes to destination 
+        
         validDestination = False
         selectSecond = False
         Drow = destination.rowval
