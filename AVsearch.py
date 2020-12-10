@@ -41,18 +41,18 @@ class Tile:
         self.OBSV = [0, 0, 0, 0]
         #Legend:
         #first(0) index corresponds to enemy hero in adjacent tile
-        #second(1) index corresponds to enemy hero in adjacent tile
-        #third(2) index corresponds to enemy hero in adjacent tile
-        #fourth(3) index corresponds to enemy hero in adjacent tile
+        #second(1) index corresponds to enemy mage in adjacent tile
+        #third(2) index corresponds to enemy wumpus in adjacent tile
+        #fourth(3) index corresponds to pit in adjacent tile
 
         #These will automatically be made for each tile every round: requires no input for algorithm
 
         self.pValues = [0, 0, 0, 0]
         #Legend:
         #first(0) index corresponds to probability of enemy hero in adjacent tile
-        #second(1) index corresponds to probability of enemy hero in adjacent tile
-        #third(2) index corresponds to probability of enemy hero in adjacent tile
-        #fourth(3) index corresponds to probability of enemy hero in adjacent tile
+        #second(1) index corresponds to probability of enemy mage in adjacent tile
+        #third(2) index corresponds to probability of enemy wumpus in adjacent tile
+        #fourth(3) index corresponds to probability of pit in adjacent tile
 
         #These will need to be manually calculated by the algorithm, then updated every round
 
@@ -127,6 +127,27 @@ class Tile:
         pygame.display.update()
         return
 
+#this function checks if the observation that a given tile receives is consistent with its neighboring pieces/pits.
+    def filtering(self, screen, h, player):
+        consistent = None
+        for i in range(self.side):
+            for j in range(self.side):
+                if self.board[i][j].OBSV[0] == 1:
+                    for k in self.board[i][j].neighbors:
+                        if self.board[i][j].player == "adversary" and self.board[i][j].unit == "hero":
+                            consistent = True
+                if self.board[i][j].OBSV[1] == 1:
+                    for k in self.board[i][j].neighbors:
+                        if self.board[i][j].player == "adversary" and self.board[i][j].unit == "mage":
+                            consistent = True
+                if self.board[i][j].OBSV[2] == 1:
+                    for k in self.board[i][j].neighbors:
+                        if self.board[i][j].player == "adversary" and self.board[i][j].unit == "wumpus":
+                            consistent = True
+                if self.board[i][j].OBSV[3] == 1:
+                    for k in self.board[i][j].neighbors:
+                        if self.board[i][j].player == "neutral" and self.board[i][j].unit == "pit":
+                            consistent = True
 
 
 #Gameboard Class containing tiles indexed by row and column
