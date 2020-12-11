@@ -129,25 +129,38 @@ class Tile:
 
 #this function checks if the observation that a given tile receives is consistent with its neighboring pieces/pits.
     def filtering(self, screen, h, player):
-        consistent = None
+		
+        possible_hero_tiles = [None]*0
+        consistent_hero = [None]*0
+        possible_mage_tiles = [None]*0
+        consistent_mage = [None]*0
+        possible_wumpus_tiles = [None]*0
+        consistent_wumpus = [None]*0
+        possible_pit_tiles = [None]*0
+        consistent_pit = [None]*0
+	
         for i in range(self.side):
             for j in range(self.side):
                 if self.board[i][j].OBSV[0] == 1:
                     for k in self.board[i][j].neighbors:
+                        possible_hero_tiles.append(self.board[i][j])
                         if self.board[i][j].player == "adversary" and self.board[i][j].unit == "hero":
-                            consistent = True
+                            consistent_hero.append(self.board[i][j])
                 if self.board[i][j].OBSV[1] == 1:
                     for k in self.board[i][j].neighbors:
+                        possible_mage_tiles.append(self.board[i][j])
                         if self.board[i][j].player == "adversary" and self.board[i][j].unit == "mage":
-                            consistent = True
+                            consistent_mage.append(self.board[i][j])
                 if self.board[i][j].OBSV[2] == 1:
                     for k in self.board[i][j].neighbors:
+                        possible_wumpus_tiles.append(self.board[i][j])
                         if self.board[i][j].player == "adversary" and self.board[i][j].unit == "wumpus":
-                            consistent = True
+                            consistent_wumpus.append(self.board[i][j])
                 if self.board[i][j].OBSV[3] == 1:
                     for k in self.board[i][j].neighbors:
+                        possible_pit_tiles.append(self.board[i][j])
                         if self.board[i][j].player == "neutral" and self.board[i][j].unit == "pit":
-                            consistent = True
+                            consistent_pit.append(self.board[i][j])
 
 
 #Gameboard Class containing tiles indexed by row and column
