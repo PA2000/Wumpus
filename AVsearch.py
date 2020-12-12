@@ -228,7 +228,16 @@ class Gameboard:
                             continue
                         self.board[i][j].neighbors.append(self.board[i + k][j + l])
 
-    def map_check(self, piece_mappings, ops_list):
+    def map_check(self, piece_mappings, ops_list, given_p):
+        if given_p != None:
+            give_f = 0
+            for maping in piece_mappings: 
+                if maping[0] == given_p[0] and maping[1] == given_p[1]: 
+                    give_f = 1 
+
+            if give_f == 0:
+                return False
+
         for maping in piece_mappings:
             for neighbor in self.board[maping[1][0]][maping[1][1]].neighbors:
                 if self.board[neighbor.rowval][neighbor.colval].player == "agent":
@@ -243,7 +252,7 @@ class Gameboard:
         return True                      
     
 
-    def piece_space_map(self, vec_piece,no_pieces,obs_loc): 
+    def piece_space_map(self, vec_piece,no_pieces,obs_loc,given_p): 
         ''' this function will take a set of pieces and map them to all posiblle lcoations on the board '''
         open_spaces = [None]*0 
         
@@ -259,14 +268,14 @@ class Gameboard:
         if no_pieces == 2:  
             for op in open_spaces: 
                 for op2 in open_spaces: 
-                    if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2]])):
+                    if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2]],given_p)):
                         p_o += self.prob_func([[vec_piece[0],op ], [vec_piece[1], op2]])
         
         elif no_pieces == 3: 
             for op in open_spaces: 
                 for op2 in open_spaces:
                     for op3 in open_spaces:
-                        if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3] ])):
+                        if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3] ], given_p)):
                             p_o += self.prob_func([[vec_piece[0],op ], [vec_piece[1], op2],[vec_piece[2],op3]])
         
         elif no_pieces == 4: 
@@ -274,7 +283,7 @@ class Gameboard:
                 for op2 in open_spaces:
                     for op3 in open_spaces:
                         for op4 in open_spaces:
-                            if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3], [vec_piece[3],op4] ])):
+                            if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3], [vec_piece[3],op4] ],given_p )):
                                 p_o += self.prob_func([[vec_piece[0],op ], [vec_piece[1], op2],[vec_piece[2],op3],[vec_piece[3],op4]]) 
             
         elif no_pieces == 5: 
@@ -283,7 +292,7 @@ class Gameboard:
                       for op3 in open_spaces:
                             for op4 in open_spaces:
                                 for op5 in open_spaces: 
-                                    if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3], [vec_piece[3],op4], [vec_piece[4],op5] ])):
+                                    if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3], [vec_piece[3],op4], [vec_piece[4],op5] ], given_p)):
                                         p_o +=  self.prob_func([[vec_piece[0],op ], [vec_piece[1], op2],[vec_piece[2],op3], [vec_piece[3],op4], [vec_piece[4],op5]]) 
  
 
@@ -294,7 +303,7 @@ class Gameboard:
                             for op4 in open_spaces:
                                 for op5 in open_spaces:
                                     for op6 in open_spaces:
-                                        if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3], [vec_piece[3],op4], [vec_piece[4],op5],[vec_piece[5],op6]])):
+                                        if( self.map_check(obs_loc, [[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3], [vec_piece[3],op4], [vec_piece[4],op5],[vec_piece[5],op6]],given_p)):
                                             p_o += self.prob_func([[vec_piece[0],op ], [vec_piece[1], op2], [vec_piece[2],op3], [vec_piece[3],op4], [vec_piece[4],op5],[vec_piece[5],op6]])
             
         return p_o
@@ -1008,7 +1017,11 @@ while True:
                             obs_list.append([BOARD.board[i][j].unit, [i,j]]) 
 
             
-            p_o = BOARD.piece_space_map(vec_pieces,no_pieces,obs_list)    
+            p_o = BOARD.piece_space_map(vec_pieces,no_pieces,obs_list,None) 
+            for i in range(BOARD.side):
+                for j in range(BOARD.side):
+                    if BOARD.board[i][j].pvalues 
+
 
             print("agent move")
             if oneMoveOnly == True:
