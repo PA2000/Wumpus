@@ -1,28 +1,40 @@
    
 class piece_pacakge_info: 
      
-     def __init__(self,piece_type,coors,obs): 
-        self.piece = peice 
-        sellf.piece_type = piece_type
+    def __init__(self,piece_type,coors,obs): 
+        self.piece = piece 
+        self.piece_type = piece_type
         self.coors = coors 
         self.obs = obs 
  
 
-   def map_check(piece_mappings,obs_locs): 
+   '''def map_check(piece_mappings,obs_locs): 
         """checks that given piece map satisfies contrains of obervation"""
         for piece in piece_mappings:
             for obs_pieces in obs_locs:  
                 if piece[0] == obs_pieces[0]: #match in piece type i.e both have same tag (wumpus, hero, mage) 
                     for neighs in self.board[obs_pieces[1][0]][obs_pieces[1][1]]: #checks that piece in obs is in corresponding range specfied by obs
-                        if piece[1] == neights:
+                        if piece[1] == neighs:
                             return True 
-       
+        
+
+
+       return True             
        # if don't verify that the piece locations in map lie within the constrained range given by the observation list, the list is invalid 
-        return False  
-                       
-
-            
-
+       # return False  '''
+    def map_check(piece_mappings, ops_list):
+        for map in piece_mappings:
+            for neighbor in self.board[map[1][0]][map[1][1]].neighbors:
+                if self.board[neighbor[0]][neighbor[1]].player == "agent":
+                    is_in = 0
+                    for obs_piece in obs_list:
+                        if map[0] == obs_piece[0]:
+                            for neighbor2 in self.board[obs_piece[1][0]][obs_piece[1][1]].neighboors:
+                                if map[1] is neighbor2:
+                                    is_in = 1
+                    if(is_in == 0):
+                        return False
+        return True                      
 
 
    def piece_space_map(vec_piece,no_pieces,obs_loc): 
@@ -80,25 +92,12 @@ class piece_pacakge_info:
 
 
 
-
-
-
         #self.pValues = [0, 0, 0, 0]
         #Legend:
         #first(0) index corresponds to probability of enemy hero in adjacent tile
         #second(1) index corresponds to probability of enemy mage in adjacent tile
         #third(2) index corresponds to probability of enemy wumpus in adjacent tile
         #fourth(3) index corresponds to probability of pit in adjacent tile
-
-
-
-
-
-
-
-
-
-
 
 
 
