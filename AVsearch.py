@@ -1018,10 +1018,13 @@ while True:
 
             
             p_o = BOARD.piece_space_map(vec_pieces,no_pieces,obs_list,None) 
+            if p_o == 0: 
+                p_o+= 0.000000001 
             for i in range(BOARD.side):
                 for j in range(BOARD.side):
-                    if BOARD.board[i][j].pvalues 
-
+                    BOARD.board[i][j].pValues[0] = BOARD.board[i][j].pValues[0] * BOARD.piece_space_map(vec_pieces,no_pieces,obs_list,["hero",[i,j]])/p_o 
+                    BOARD.board[i][j].pValues[1] = BOARD.board[i][j].pValues[1] * BOARD.piece_space_map(vec_pieces,no_pieces,obs_list,["mage",[i,j]])/p_o
+                    BOARD.board[i][j].pValues[2] = BOARD.board[i][j].pValues[2] * BOARD.piece_space_map(vec_pieces,no_pieces,obs_list,["wumpus",[i,j]])/p_o 
 
             print("agent move")
             if oneMoveOnly == True:
