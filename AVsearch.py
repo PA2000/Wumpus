@@ -338,7 +338,7 @@ class Gameboard:
 	piece_types: [M, W, H]   '''
 
     def prob_func(self, piece_map):
-        #get numer of heroes, mages, and wumpus
+        #get number of heroes, mages, and wumpus
         h = 0
         for i in range(self.side):
             for j in range(self.side):
